@@ -1,0 +1,21 @@
+--- vendor.py	2024-05-11 22:11:33.403165916 +0000
++++ vendor-new.py	2024-05-11 22:37:20.468386298 +0000
+@@ -41,15 +41,15 @@
+     parser.parse_args()
+ 
+     packages = {
+-        "meson==0.63.3":
+-        "d677b809c4895dcbaac9bf6c43703fcb3609a4b24c6057c78f828590049cf43a",
++        "meson==1.2.3":
++        "4533a43c34548edd1f63a276a42690fce15bde9409bcf20c4b8fa3d7e4d7cac1",
+     }
+ 
+     vendor_dir = Path(__file__, "..", "..", "wheels").resolve()
+ 
+     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8") as file:
+         for dep_spec, checksum in packages.items():
+-            file.write(f"{dep_spec} --hash=sha256:{checksum}")
++            print(f"{dep_spec} --hash=sha256:{checksum}", file=file)
+         file.flush()
+ 
+         cli_args = [

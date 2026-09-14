@@ -1,0 +1,11 @@
+--- meson_options.txt.orig	2024-04-15 05:56:43.401461990 +0000
++++ meson_options.txt	2024-04-15 06:02:40.532442387 +0000
+@@ -43,6 +43,8 @@
+        description: 'Documentations build support')
+ option('fuzzing', type : 'boolean', value: false,
+        description: 'build fuzzing targets')
++option('llvm', type : 'boolean', value: false,
++       description: 'build llvm ir')
+ option('videzzo', type : 'boolean', value: false,
+        description: 'build videzzo targets')
+ option('gettext', type : 'feature', value : 'auto',

@@ -1,0 +1,29 @@
+--- ./videzzo_qemu/videzzo_qemu.c	2024-02-06 03:49:45.104116784 +0000
++++ ./videzzo_qemu/videzzo_qemu.c	2024-02-06 05:13:12.794796506 +0000
+@@ -17,7 +17,7 @@
+ // moved to tests/qtest/libqos/, and in commit
+ // 907b5105f1b9e1af1abbdbb4f2039c7ab105c001 the libqtest.h was moved back
+ // (7.1.0).
+-#if QEMU_VERSION_MAJOR == 6 || (QEMU_VERSION_MAJOR == 7 && QEMU_VERSION_MICRO == 0)
++#if QEMU_VERSION_MAJOR == 5 || QEMU_VERSION_MAJOR == 6 || (QEMU_VERSION_MAJOR == 7 && QEMU_VERSION_MICRO == 0)
+ #include "tests/qtest/libqos/libqtest.h"
+ #else
+ #include "tests/qtest/libqtest.h"
+@@ -29,7 +29,9 @@
+ #include "exec/address-spaces.h"
+ #include "hw/qdev-core.h"
+ #include "hw/pci/pci.h"
++#if QEMU_VERSION_MAJOR > 5
+ #include "hw/pci/pci_device.h"
++#endif
+ #include "hw/boards.h"
+ #include "exec/ioport.h"
+ #include "tests/qtest/libqos/pci-pc.h"
+@@ -42,6 +44,7 @@
+ #include "sysemu/qtest.h"
+ #include "sysemu/sysemu.h"
+ #include "videzzo.h"
++#include "videzzo_fork.h"
+ #ifdef CLANG_COV_DUMP
+ #include "clangcovdump.h"
+ #ifdef __cplusplus

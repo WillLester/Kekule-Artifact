@@ -1,0 +1,13 @@
+--- videzzo_qemu.c	2024-08-26 19:57:23.696764406 +0000
++++ videzzo_qemu.c.mod	2024-12-21 21:49:36.829887859 +0000
+@@ -39,8 +39,8 @@
+ #include "qemu/cutils.h"
+ #include "qemu/datadir.h"
+ #include "qemu/main-loop.h"
+-#include "system/qtest.h"
+-#include "system/system.h"
++#include "sysemu/qtest.h"
++#include "sysemu/sysemu.h"
+ #include "videzzo.h"
+ #ifdef CLANG_COV_DUMP
+ #include "clangcovdump.h"

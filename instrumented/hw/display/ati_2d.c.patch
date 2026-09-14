@@ -1,0 +1,18 @@
+--- videzzo_qemu/qemu/hw/display/ati_2d.c.orig	2024-12-14 21:37:07.908068176 +0000
++++ videzzo_qemu/qemu/hw/display/ati_2d.c	2024-12-14 21:56:07.710606140 +0000
+@@ -218,6 +218,15 @@
+             /* fallback when pixman failed or we don't want to call it */
+             unsigned int x, y, i, bypp = bpp / 8;
+             unsigned int dst_pitch = dst_stride * sizeof(uint32_t);
++            if (bypp != 1 && bypp != 2 && bypp != 4 && bypp != 8) {
++                bypp--;
++                bypp |= bypp >> 1;
++                bypp |= bypp >> 2;
++                bypp |= bypp >> 4;
++                bypp |= bypp >> 8;
++                bypp |= bypp >> 16;
++                bypp += 1;
++	    }
+             for (y = 0; y < s->regs.dst_height; y++) {
+                 i = dst_x * bypp + (dst_y + y) * dst_pitch;
+                 for (x = 0; x < s->regs.dst_width; x++, i += bypp) {

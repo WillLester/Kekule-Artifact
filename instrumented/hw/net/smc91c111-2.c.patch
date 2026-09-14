@@ -1,0 +1,20 @@
+--- hw/net/smc91c111.c.orig	2024-12-22 22:59:56.847960879 +0000
++++ hw/net/smc91c111.c	2024-12-25 07:25:28.799462997 +0000
+@@ -237,6 +237,8 @@
+         len = *(p++);
+         len |= ((int)*(p++)) << 8;
+         len -= 6;
++        if (len > 2042)
++            continue;
+         control = p[len + 1];
+         if (control & 0x20)
+             len++;
+@@ -428,7 +430,7 @@
+             /* Ignore.  */
+             return;
+         case 2: /* Packet Number Register */
+-            s->packet_num = value;
++            s->packet_num = value & (NUM_PACKETS - 1);
+             return;
+         case 3: case 4: case 5:
+             /* Should be readonly, but linux writes to them anyway. Ignore.  */

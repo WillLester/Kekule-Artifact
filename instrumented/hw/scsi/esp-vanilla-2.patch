@@ -1,0 +1,12 @@
+--- esp.c	2022-04-19 19:10:27.000000000 +0000
++++ esp.c.orig	2024-02-18 17:30:00.281317934 +0000
+@@ -759,7 +759,8 @@
+     }
+ 
+     if (to_device) {
+-        len = MIN(fifo8_num_used(&s->fifo), ESP_FIFO_SZ);
++        len = MIN(s->async_len, ESP_FIFO_SZ);
++        len = MIN(len, fifo8_num_used(&s->fifo));
+         esp_fifo_pop_buf(&s->fifo, s->async_buf, len);
+         s->async_buf += len;
+         s->async_len -= len;

@@ -1,0 +1,27 @@
+--- ./videzzo/videzzo_qemu/Makefile.orig	2024-10-29 17:15:01.961603462 +0000
++++ ./videzzo/videzzo_qemu/Makefile	2024-10-29 17:15:59.542771683 +0000
+@@ -11,10 +11,8 @@
+ patch:
+ 	cp 0001-Update-QEMU-to-support-ViDeZZo-as-a-library.patch qemu/
+ 	cp 0001-fix-assertion-in-hw-usb-core.c.patch qemu/
+-	cp 0001-Revert-util-cutils-Remove-unused-qemu_get_exec_dir.patch qemu/
+ 	cd qemu && patch -p 1 < 0001-Update-QEMU-to-support-ViDeZZo-as-a-library.patch && \
+ 		patch -p 1 < 0001-fix-assertion-in-hw-usb-core.c.patch && \
+-		patch -p 1 < 0001-Revert-util-cutils-Remove-unused-qemu_get_exec_dir.patch && \
+ 		./configure && make update-buildoptions && \
+ 		cd $(OLDPWD)
+ 
+@@ -37,7 +35,7 @@
+ 		sudo apt-get install -y make autoconf automake libtool ninja-build libglib2.0-dev \
+ 			libfdt-dev libpixman-1-dev zlib1g-dev patchelf wget libattr1 libattr1-dev \
+ 			libcap-ng-dev pkg-config libvncserver-dev && \
+-		git clone https://github.com/qemu/qemu.git --depth 1; make patch; fi
++		git clone https://gitlab.com/qemu-project/qemu.git; fi;
+ 
+ qemu: qemu-dep
+ 	make compile
+@@ -64,4 +62,3 @@
+ distclean:
+ 	rm -f *_*.h *.yaml
+ 	rm -rf out-*
+-	rm -rf qemu

@@ -1,0 +1,11 @@
+--- hw/scsi/scsi-disk.c	2024-07-09 00:38:13.027481883 +0000
++++ hw/scsi/scsi-disk-patched.c	2024-07-09 00:39:19.156844460 +0000
+@@ -1724,6 +1724,8 @@
+     SCSIDiskReq *r = data->r;
+     SCSIDiskState *s = DO_UPCAST(SCSIDiskState, qdev, r->req.dev);
+ 
++    if (r->req.aiocb != NULL)
++        return;
+     assert(r->req.aiocb == NULL);
+ 
+     if (data->count > 0) {

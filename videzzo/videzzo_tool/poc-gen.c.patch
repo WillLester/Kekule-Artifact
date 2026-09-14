@@ -1,0 +1,11 @@
+--- poc-gen.c.orig	2025-01-07 05:59:22.651274718 +0000
++++ poc-gen.c	2025-01-07 05:59:31.376453885 +0000
+@@ -213,7 +213,7 @@
+         // let's skip lines that are empty
+         if (len == 0)
+             continue;
+-        char sum = 0;
++        long long sum = 0;
+         for (int i = 0; i < len; i++)
+             sum += line[i];
+         if (sum == '\n')

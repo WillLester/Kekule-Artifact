@@ -1,0 +1,11 @@
+--- qemu/hw/display/cirrus_vga_rop2.h.orig	2025-01-11 06:10:32.127497050 +0000
++++ qemu/hw/display/cirrus_vga_rop2.h	2025-01-11 06:12:06.627453519 +0000
+@@ -211,6 +211,8 @@
+     for(y = 0; y < bltheight; y++) {
+         bits = cirrus_src(s, srcaddr + pattern_y) ^ bits_xor;
+         bitpos = 7 - srcskipleft;
++        if (bitpos < 0)
++            break;
+         addr = dstaddr + dstskipleft;
+         for (x = dstskipleft; x < bltwidth; x += (DEPTH / 8)) {
+             if ((bits >> bitpos) & 1) {

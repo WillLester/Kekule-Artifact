@@ -1,0 +1,11 @@
+--- ViDeZZo/videzzo_qemu/0004-zip-qemu-targets.sh.orig	2024-12-15 07:36:15.930469197 +0000
++++ ViDeZZo/videzzo_qemu/0004-zip-qemu-targets.sh	2024-12-15 07:37:00.742355146 +0000
+@@ -10,7 +10,7 @@
+ 
+ pushd qemu/out-$CONTROL
+ cp -r ../pc-bios $DEST_DIR/pc-bios
+-archs=(i386 x86_64 arm aarch64)
++archs=("i386" "x86_64" "arm" "aarch64")
+ for arch in ${archs[@]}; do
+     targets=$(./qemu-videzzo-$arch | awk '$1 ~ /\*/  {print $2}')
+     for target in $(echo "$targets" | head -n -1); do

@@ -1,0 +1,37 @@
+--- FuzzerLoop.cpp.orig	2024-12-28 08:05:44.700576458 +0000
++++ FuzzerLoop.cpp	2024-12-28 08:12:56.455414564 +0000
+@@ -671,22 +671,22 @@
+ 	//    Printf("Found new path\n");
+ 		//NewCount++;
+ 		//Printf("%lu seeds found new paths\n", NewCount);
+-	//size_t SecSinceStart = secondsSinceProcessStartUp();
+-	//if (SecSinceStart > CurSec) {
+-	//	CurSec = SecSinceStart;
+-	//	std::ofstream depStatistics("dep-cov.txt", std::ios::app);
+-	//	if (depStatistics.is_open()) {
+-	//		depStatistics << CurSec << " ";
+-	//		double cov = (double) DepCov / (double) DepSum * 100;
+-	//		depStatistics << std::fixed << std::setprecision(2) << cov << std::endl;
+-	//	}
+-	//	depStatistics.close();
+-	//}
++	size_t SecSinceStart = secondsSinceProcessStartUp();
++	if (SecSinceStart > CurSec) {
++		CurSec = SecSinceStart;
++		std::ofstream depStatistics("dep-cov.txt", std::ios::app);
++		if (depStatistics.is_open()) {
++			depStatistics << CurSec << " ";
++			double cov = (double) DepCov / (double) DepSum * 100;
++			depStatistics << std::fixed << std::setprecision(2) << cov << std::endl;
++		}
++		depStatistics.close();
++	}
+ 	const std::vector<size_t>& finalHashes = Dependencies.matchSeq(Seq);
+ 	for (size_t finalHash : finalHashes) {
+ 		if (GlobalReg.AddValue(finalHash)) {
+ 			FoundNewRegOp = true;
+-			//DepCov++;
++			DepCov++;
+ 			//NewCount++;
+ 			//Printf("%lu seeds found new paths\n", NewCount);
+ 		}

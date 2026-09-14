@@ -1,0 +1,11 @@
+--- hw/usb/core.c.orig	2025-01-12 04:57:43.090310899 +0000
++++ hw/usb/core.c	2025-01-12 04:59:13.769192923 +0000
+@@ -517,6 +517,8 @@
+ void usb_cancel_packet(USBPacket * p)
+ {
+     bool callback = (p->state == USB_PACKET_ASYNC);
++    if (!usb_packet_is_inflight(p))
++        return;
+     assert(usb_packet_is_inflight(p));
+     usb_packet_set_state(p, USB_PACKET_CANCELED);
+     QTAILQ_REMOVE(&p->ep->queue, p, queue);

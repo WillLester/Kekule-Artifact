@@ -1,0 +1,11 @@
+--- videzzo_qemu/qemu/hw/net/smc91c111.c.orig	2024-12-17 05:40:48.701577955 +0000
++++ videzzo_qemu/qemu/hw/net/smc91c111.c	2024-12-15 09:00:08.354814731 +0000
+@@ -429,7 +429,7 @@
+             /* Ignore.  */
+             return;
+         case 2: /* Packet Number Register */
+-            s->packet_num = value;
++            s->packet_num = value & (NUM_PACKETS - 1);
+             return;
+         case 3: case 4: case 5:
+             /* Should be readonly, but linux writes to them anyway. Ignore.  */

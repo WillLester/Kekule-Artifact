@@ -1,0 +1,10 @@
+--- ./0002-copy-to-qemu.sh	2024-02-28 22:32:25.895241837 +0000
++++ ./0002-copy-to-qemu.sh	2024-03-21 21:14:43.452975513 +0000
+@@ -4,6 +4,7 @@
+ cp ../clangcovdump.h $target/
+ cp ../videzzo.h $target/
+ cp ../videzzo_fork.h $target
++cp ../videzzo_fork.c $target
+ cp ../videzzo_fork.ld $target
+ cp ../libvidezzo.a.qemu $target/libvidezzo.a
+ cp videzzo_qemu.c $target/

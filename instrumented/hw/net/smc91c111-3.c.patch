@@ -1,0 +1,38 @@
+--- hw/net/smc91c111.c.orig	2025-01-01 02:41:57.546162965 +0000
++++ hw/net/smc91c111.c	2025-01-01 04:06:05.154943870 +0000
+@@ -237,6 +237,8 @@
+         len = *(p++);
+         len |= ((int)*(p++)) << 8;
+         len -= 6;
++        if (len > 2042)
++            continue;
+         control = p[len + 1];
+         if (control & 0x20)
+             len++;
+@@ -428,7 +430,7 @@
+             /* Ignore.  */
+             return;
+         case 2: /* Packet Number Register */
+-            s->packet_num = value;
++            s->packet_num = value & (NUM_PACKETS - 1);
+             return;
+         case 3: case 4: case 5:
+             /* Should be readonly, but linux writes to them anyway. Ignore.  */
+@@ -454,6 +456,8 @@
+                 } else {
+                     p += (offset & 3);
+                 }
++                if (p >= 2048)
++                    return;
+                 s->data[n][p] = value;
+             }
+             return;
+@@ -602,6 +606,8 @@
+                 } else {
+                     p += (offset & 3);
+                 }
++                if (p >= 2048)
++                    return 0;
+                 return s->data[n][p];
+             }
+         case 12: /* Interrupt status.  */

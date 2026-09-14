@@ -1,0 +1,12 @@
+--- esp.c.orig	2025-05-13 06:44:30.796851375 +0000
++++ esp.c	2025-05-13 06:46:22.620171277 +0000
+@@ -759,7 +759,8 @@
+     }
+ 
+     if (to_device) {
+-        len = MIN(fifo8_num_used(&s->fifo), ESP_FIFO_SZ);
++        len = MIN(s->async_len, ESP_FIFO_SZ);
++        len = MIN(len, fifo8_num_used(&s->fifo));
+         esp_fifo_pop_buf(&s->fifo, s->async_buf, len);
+         s->async_buf += len;
+         s->async_len -= len;

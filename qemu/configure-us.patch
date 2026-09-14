@@ -1,0 +1,18 @@
+--- configure.orig	2024-03-26 23:25:53.588544073 +0000
++++ configure	2024-03-27 17:42:37.965627108 +0000
+@@ -75,6 +75,7 @@
+ TMPC="${TMPDIR1}/${TMPB}.c"
+ TMPO="${TMPDIR1}/${TMPB}.o"
+ TMPE="${TMPDIR1}/${TMPB}.exe"
++TMPLL="${TMPDIR1}/${TMPB}.ll"
+ 
+ rm -f config.log
+ 
+@@ -1843,6 +1844,7 @@
+ preserve_env LD
+ preserve_env LDFLAGS
+ preserve_env LD_LIBRARY_PATH
++preserve_env LLVM
+ preserve_env NM
+ preserve_env OBJCFLAGS
+ preserve_env OBJCOPY

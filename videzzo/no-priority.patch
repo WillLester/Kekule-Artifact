@@ -1,0 +1,15 @@
+--- FuzzerLoop.cpp	2025-04-01 21:08:35.328050684 +0000
++++ FuzzerLoop.cpp.ab	2025-05-07 18:04:08.168580234 +0000
+@@ -715,10 +715,10 @@
+ 
+   uint8_t Priority = 0;
+   if (NumNewFeatures || ForceAddToCorpus) {
+-    Priority += PRIOR_COV;
++    Priority = 1;
+   }
+   if (FoundNewRegOp) {
+-    Priority += PRIOR_DEP;
++    Priority = 1;
+     //if (!NumNewFeatures && !ForceAddToCorpus) {
+     //	NewCount++;
+     //	Printf("%lu seeds found new paths without new coverage\n", NewCount);

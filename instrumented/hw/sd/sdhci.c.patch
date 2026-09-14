@@ -1,0 +1,11 @@
+--- hw/sd/sdhci.c.orig	2025-01-11 06:51:06.788446708 +0000
++++ hw/sd/sdhci.c	2025-01-11 06:52:15.128811559 +0000
+@@ -474,6 +474,8 @@
+ 
+     for (i = 0; i < size; i++) {
+         assert(s->data_count < s->buf_maxsz);
++	if (s->data_count >= s->buf_maxsz)
++            return 0;
+         value |= s->fifo_buffer[s->data_count] << i * 8;
+         s->data_count++;
+         /* check if we've read all valid data (blksize bytes) from buffer */

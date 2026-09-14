@@ -1,0 +1,26 @@
+--- ../../ViDeZZo/videzzo_qemu/0001-Update-QEMU-to-support-ViDeZZo-as-a-library.patch	2024-08-26 19:57:23.692764328 +0000
++++ videzzo_qemu/0001-Update-QEMU-to-support-ViDeZZo-as-a-library.patch	2024-09-02 23:58:08.717409383 +0000
+@@ -28,7 +28,7 @@
+  
+ +if get_option('videzzo')
+ +  qemu_cflags += ['-videzzo-instrumentation=' + (meson.current_source_dir() / 'videzzo_qemu_types.yaml')]
+-+  qemu_cflags += ['-flegacy-pass-manager']
+++  qemu_cflags += ['']
+ +  add_project_link_arguments(['-Wl,-T,',
+ +    (meson.current_source_dir() / 'tests/qtest/videzzo/videzzo_fork.ld')], native: false, language: all_languages)
+ +endif
+@@ -130,12 +130,13 @@
+ index 0000000..a9c692a
+ --- /dev/null
+ +++ b/tests/qtest/videzzo/meson.build
+-@@ -0,0 +1,21 @@
++@@ -0,0 +1,22 @@
+ +if not get_option('videzzo')
+ +  subdir_done()
+ +endif
+ +
+ +videzzo_fuzz_ss.add(files('less_crashes_wrappers.c'), qos)
+++videzzo_fuzz_ss.add(files('videzzo_fork.c'), qos)
+ +
+ +# Targets
+ +videzzo_fuzz_ss.add(files('videzzo_qemu.c'))

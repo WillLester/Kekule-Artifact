@@ -1,0 +1,14 @@
+3a4,12
+> SANITIZER_COMMIT="cb771ac1f"
+> CURRENT_COMMIT=$(git rev-parse HEAD)
+> if git merge-base --is-ancestor "$CURRENT_COMMIT" "$SANITIZER_COMMIT"; then
+> 	echo "The current commit is not after the target commit [$SANITIZER_COMMIT]"
+> 	dis_sanitizer_option="--disable-sanitizers"
+> else
+> 	echo "The current commit is after the target commit [$SANITIZER_COMMIT]"
+> 	dis_sanitizer_option="--disable-ubsan --disable-asan"
+> fi
+9c18
+<     --disable-werror --disable-asan --disable-ubsan --enable-spice \
+---
+>     --disable-werror $dis_sanitizer_option --enable-spice \
