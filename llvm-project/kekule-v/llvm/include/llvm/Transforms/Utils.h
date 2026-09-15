@@ -92,12 +92,6 @@ FunctionPass *createAddDiscriminatorsPass();
 //
 FunctionPass *createPromoteMemoryToRegisterPass();
 
-////===----------------------------------------------------------------------===//
-////
-//// ViDeZZoInstrumentation - This pass instruments functions required by ViDeZZo
-////
-//ModulePass *createViDeZZoInstrumentationPass(InstrumentationPointList instrumentation_point_list = {});
-
 //===----------------------------------------------------------------------===//
 //
 // LoopSimplify - Insert Pre-header blocks into the CFG for every function in

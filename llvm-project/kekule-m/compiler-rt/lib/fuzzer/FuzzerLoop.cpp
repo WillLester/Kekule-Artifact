@@ -170,7 +170,6 @@ void Fuzzer::InitializeDependencies() {
 		  std::getline(iss, token, '.');
 		  uint16_t varId = static_cast<uint16_t>(std::stoi(token));
 		  std::getline(iss, token, '.');
-		  //Printf("token is %s\n", token);
 		  bool isRead = static_cast<bool>(std::stoi(token));
 		  cur = RegVar(regId, varId, isRead);
 		  Dependencies.addNode(RegVar(regId, varId, isRead));
@@ -518,7 +517,6 @@ void Fuzzer::RereadOutputCorpus(size_t MaxSize) {
     if (U.size() > MaxSize)
       U.resize(MaxSize);
     if (!Corpus.HasUnit(U)) {
-      // TotalNumberOfValidRuns++;
       if (RunOne(U.data(), U.size())) {
         CheckExitOnSrcPosOrItem();
         Reloaded = true;

@@ -35,7 +35,7 @@
  			//NewCount++;
  			//Printf("%lu seeds found new paths\n", NewCount);
  		}
-@@ -717,13 +717,13 @@
+@@ -717,13 +717,6 @@
    if (NumNewFeatures || ForceAddToCorpus) {
      Priority += PRIOR_COV;
    }
@@ -46,13 +46,6 @@
 -    //	Printf("%lu seeds found new paths without new coverage\n", NewCount);
 -    //}
 -  }
-+  // if (FoundNewRegOp) {
-+  //   Priority += PRIOR_DEP;
-+  //   //if (!NumNewFeatures && !ForceAddToCorpus) {
-+  //   //	NewCount++;
-+  //   //	Printf("%lu seeds found new paths without new coverage\n", NewCount);
-+  //   //}
-+  // }
  
    if (NumNewFeatures || ForceAddToCorpus || FoundNewRegOp) {
      TPC.UpdateObservedPCs();

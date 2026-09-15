@@ -10,7 +10,7 @@ index 375bda2..c05e78b 100644
  
  namespace fuzzer {
  static const size_t kMaxUnitSizeToPrint = 256;
-@@ -898,9 +899,16 @@ void Fuzzer::MutateAndTestOne() {
+@@ -898,9 +899,15 @@ void Fuzzer::MutateAndTestOne() {
  
    auto &II = Corpus.ChooseUnitToMutate(MD.GetRand());
    if (Options.DoCrossOver) {
@@ -20,7 +20,6 @@ index 375bda2..c05e78b 100644
 +    // Randomly choose N units to cross over instead.
 +    Random& Rand = MD.GetRand();
 +    size_t N = Rand(CROSS_OVER_LIMIT) + 1;
-+    // Printf("%u crossovers\n", N);
 +    MD.CleanCrossOverWith();
 +    for (size_t i = 0; i < N; ++i) {
 +      auto &CrossOverII = Corpus.ChooseUnitToCrossOverWith(
@@ -35,7 +34,7 @@ new file mode 100644
 index 0000000..3421239
 --- /dev/null
 +++ b/llvm-project-morphuzz/compiler-rt/lib/fuzzer/FuzzerMutate.cpp
-@@ -0,0 +1,614 @@
+@@ -0,0 +1,604 @@
 +//===- FuzzerMutate.cpp - Mutate a test input -----------------------------===//
 +//
 +// Part of the LLVM Project, under the Apache License v2.0 with LLVM Exceptions.
@@ -94,7 +93,6 @@ index 0000000..3421239
 +    Mutators = DefaultMutators;
 +
 +  if (EF->LLVMFuzzerCustomCrossOver) {
-+    // Printf("Found custom crossover\n");
 +    Mutators.push_back(
 +        {&MutationDispatcher::Mutate_CustomCrossOver, "CustomCrossOver"});
 +  }
@@ -122,13 +120,10 @@ index 0000000..3421239
 +  if (Size == 0)
 +    return 0;
 +  if (CrossOverWith.empty()) return 0;
-+  // Printf("Select CrossOver\n");
 +  size_t NewSize = 0;
-+  // Printf("Crossover units %u\n", CrossOverWith.size());
 +  size_t CrossOverCnt = 0;
 +  for (size_t i = 0; i < CrossOverWith.size(); ++i) {
 +    const Unit &Other = *(CrossOverWith[i]);
-+    // Printf("Unit selected\n");
 +    if (Other.empty())
 +      continue;
 +    CustomCrossOverInPlaceHere.resize(MaxSize);
@@ -144,16 +139,13 @@ index 0000000..3421239
 +    NewSize = EF->LLVMFuzzerCustomCrossOver(
 +        Data, Size, Other.data(), Other.size(), U.data(), U.size(),
 +        Rand.Rand<unsigned int>());
-+    // Printf("Finish custom cross over\n");
 +    if (!NewSize)
 +      continue;
 +    assert(NewSize <= MaxSize && "CustomCrossOver returned overisized unit");
-+    // Printf("Size is %u, NewSize is %u\n", Size, NewSize);
 +    CrossOverCnt++;
 +    memcpy(Data, U.data(), NewSize);
 +    Size = NewSize;
 +  }
-+  // Printf("Successfully crossover %u times.\n", CrossOverCnt);
 +  return NewSize;
 +}
 +
@@ -176,7 +168,6 @@ index 0000000..3421239
 +  size_t Idx = Rand(Size - N + 1);
 +  // Erase Data[Idx:Idx+N].
 +  memmove(Data + Idx, Data + Idx + N, Size - Idx - N);
-+  // Printf("Erase: %zd %zd => %zd; Idx %zd\n", N, Size, Size - N, Idx);
 +  return Size - N;
 +}
 +
@@ -526,7 +517,6 @@ index 0000000..3421239
 +// Copy successful dictionary entries to PersistentAutoDictionary.
 +void MutationDispatcher::RecordSuccessfulMutationSequence() {
 +  for (auto DE : CurrentDictionaryEntrySequence) {
-+    // PersistentAutoDictionary.AddWithSuccessCountOne(DE);
 +    DE->IncSuccessCount();
 +    assert(DE->GetW().size());
 +    // Linear search is fine here as this happens seldom.
@@ -601,7 +591,6 @@ index 0000000..3421239
 +    Mutator M = {&MutationDispatcher::Mutate_CustomCrossOver, "CustomCrossOver"}; // CrossOver
 +    if (Rand.RandBool()) {
 +      M = Mutators[Rand(Mutators.size())];
-+      // Printf("Normal mutators\n");
 +    }
 +    size_t NewSize = (this->*(M.Fn))(Data, Size, MaxSize);
 +    if (NewSize && NewSize <= MaxSize) {

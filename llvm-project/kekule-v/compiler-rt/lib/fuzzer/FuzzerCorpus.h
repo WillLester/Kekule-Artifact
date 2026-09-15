@@ -270,7 +270,6 @@ public:
       II.DataFlowTraceForFocusFunction = BaseII->DataFlowTraceForFocusFunction;
     DistributionNeedsUpdate = true;
     PrintCorpus();
-    // ValidateFeatureSet();
     return &II;
   }
 

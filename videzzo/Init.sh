@@ -1,5 +1,4 @@
 #!/bin/bash
-#set -x
 vanilla="$1"
 version="$2"
 mode="$3"

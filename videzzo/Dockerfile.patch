@@ -9,7 +9,7 @@
  
  RUN apt-get install -y curl
  RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-@@ -65,12 +65,16 @@
+@@ -65,12 +65,13 @@
  # fix missing slirp
  RUN apt-get install -y libslirp-dev
  
@@ -25,7 +25,4 @@
 -RUN mkdir llvm-project
 -RUN cd llvm-project && gdown https://drive.google.com/uc?id=1bHHYPwpmFaEvhkNcZuCa_Fbk8A41IEJr && \
 -tar xf llvm-project-13.tar.gz && cd $OLDPWD
-+#RUN mkdir llvm-project
-+#RUN cd llvm-project && gdown https://drive.google.com/uc?id=1bHHYPwpmFaEvhkNcZuCa_Fbk8A41IEJr && \
-+#tar xf llvm-project-13.tar.gz && cd $OLDPWD
  ENV PATH=/root/llvm-project/bin:$PATH

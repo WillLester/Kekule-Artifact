@@ -171,8 +171,6 @@ size_t Merger::Merge(const std::set<uint32_t> &InitialFeatures,
   // If new features were added, add this file to NewFiles.
   for (size_t i = NumFilesInFirstCorpus; i < Files.size(); i++) {
     auto &Cur = Files[i].Features;
-    // Printf("%s -> sz %zd ft %zd\n", Files[i].Name.c_str(),
-    //       Files[i].Size, Cur.size());
     bool FoundNewFeatures = false;
     for (auto Fe: Cur) {
       if (AllFeatures.insert(Fe).second) {

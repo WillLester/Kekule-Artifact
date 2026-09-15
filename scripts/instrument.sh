@@ -1,6 +1,5 @@
 #!/bin/sh
 exit_code=0
-#set -x
 if [ "$#" -ne 6 ]; then
 	echo "usage: script.sh platform llvm_lib_path qemu_build_path target_ll depend_path output_ll"
 	exit 1

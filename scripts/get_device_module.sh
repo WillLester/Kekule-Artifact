@@ -1,6 +1,5 @@
 #!/bin/sh
 exit_code=0
-#set -x
 if [ "$#" -ne 3 ]; then
 	echo "usage: script.sh llvm_lib_path qemu_build_path target_ll"
 	exit 1

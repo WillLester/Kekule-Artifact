@@ -129,15 +129,3 @@ PreservedAnalyses ViDeZZoInstrumentationPass::run(Module &M, ModuleAnalysisManag
 }
 
 //// TODO: enable opt and new pass manager
-//INITIALIZE_PASS_BEGIN(ViDeZZoInstrumentationLegacyPass,
-//                      "videzzo-instrumentation", "Instrumentation tool for ViDeZZo",
-//                      false, false)
-//// INITIALIZE_PASS_DEPENDENCY(WhateverYourPassDependencies)
-//INITIALIZE_PASS_END(ViDeZZoInstrumentationLegacyPass,
-//                    "videzzo-instrumentation", "Instrumentation tool for ViDeZZo",
-//                    false, false)
-
-// createViDeZZoInstrumentation - Provide an entry point to create this pass.
-//ModulePass *llvm::createViDeZZoInstrumentationPass(InstrumentationPointList instrumentation_point_list) {
-//  return new ViDeZZoInstrumentationPass(instrumentation_point_list);
-//}

@@ -479,7 +479,6 @@ void MutationDispatcher::StartMutationSequence() {
 // Copy successful dictionary entries to PersistentAutoDictionary.
 void MutationDispatcher::RecordSuccessfulMutationSequence() {
   for (auto DE : CurrentDictionaryEntrySequence) {
-    // PersistentAutoDictionary.AddWithSuccessCountOne(DE);
     DE->IncSuccessCount();
     assert(DE->GetW().size());
     // Linear search is fine here as this happens seldom.
