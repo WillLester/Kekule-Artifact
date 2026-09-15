@@ -89,7 +89,7 @@ artifact_root=$(realpath -- "$artifact_root")
 # all dependencies on a particular username, home directory, or checkout path.
 assets_dir="$artifact_root/videzzo"
 qemu_dir="$artifact_root/qemu"
-llvm_patch_dir="$artifact_root/llvm-project"
+llvm_patch_dir="$artifact_root/llvm-project/kekule-v"
 instrumented_dir="$artifact_root/instrumented"
 artifact_scripts_dir="$artifact_root/scripts"
 dependencies_dir="$artifact_root/dependencies"
