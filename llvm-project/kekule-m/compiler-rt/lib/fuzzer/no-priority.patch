@@ -1,0 +1,15 @@
+--- FuzzerLoop.cpp.orig
++++ FuzzerLoop.cpp
+@@ -654,10 +654,10 @@
+ 
+   uint8_t Priority = 0;
+   if (NumNewFeatures || ForceAddToCorpus) {
+-    Priority += PRIOR_COV;
++    Priority = 1;
+   }
+   if (FoundNewRegOp) {
+-    Priority += PRIOR_DEP;
++    Priority = 1;
+   }
+ 
+   if (NumNewFeatures || ForceAddToCorpus || FoundNewRegOp) {

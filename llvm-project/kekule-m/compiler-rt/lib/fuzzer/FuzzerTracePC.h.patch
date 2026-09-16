@@ -1,0 +1,221 @@
+--- FuzzerTracePC.h.orig
++++ FuzzerTracePC.h
+@@ -25,6 +25,8 @@
+ #include <climits>
+ #include <concepts>
+ #include <type_traits>
++
++#define NODE_LIMIT 1
+ 
+ namespace fuzzer {
+ 
+@@ -95,6 +97,71 @@
+ template <typename T>
+ concept PrintableAndHashable = BasicTypeOrHasPrintMethod<T> && HasHashMethod<T>;
+ 
++struct Path {
++public:
++	Path(std::vector<size_t> nodes) {
++		reset();
++		this->nodes = nodes;
++                this->curHash = 0;
++		this->hashv = hashPath();
++	}
++	void reset() {
++		this->cur = 0;
++	}
++	bool isCovered() {
++		return cur == nodes.size();
++	}
++        size_t getCurNode() {
++		assert(cur < nodes.size());
++		return nodes[cur];
++	}
++        size_t getCurHash() {
++	        return curHash;
++        }
++        int match(size_t node) {
++                int res = 0;
++		if (node != nodes[cur]) {
++			return res;
++		}
++                if (covered[cur]) {
++                        res = -1;
++		} else {
++                        res = 1;
++                        covered[cur] = true;
++		}
++		if (cur == 0) {
++                        curHash = nodes[cur];
++		} else {
++                        curHash = hashCombine(curHash, nodes[cur]);
++		}
++		++cur;
++		return res;
++	}
++	size_t hash() {
++		return this->hashv;
++	}
++private:
++	uint8_t cur;
++	size_t hashv;
++        size_t curHash;
++	std::vector<size_t> nodes;
++        std::vector<bool> covered;
++
++	size_t hashPath() {
++		size_t tmp = nodes[0];
++                covered.push_back(false);
++		for (uint32_t i = 1; i < nodes.size(); ++i) {
++			tmp = hashCombine(tmp, nodes[i]);
++                        covered.push_back(false);
++		}
++		return tmp;
++	}
++
++	size_t hashCombine(size_t value1, size_t node2) {
++		return value1 ^ (node2 + 0x9e3779b9 + (value1 << 6) + (value1 >> 2));
++	}
++};
++
+ struct AccessVar {
+ 	uint16_t id;
+ 	uint8_t typeId;
+@@ -194,8 +261,9 @@
+ struct Graph {
+ public:
+ 	Graph() {
+-    }
+-	
++                pathNum = 0;
++	}
++
+ 	void addNode(T node) {
+ 		nodes.insert(node.hash());
+ 	}
+@@ -203,35 +271,65 @@
+ 	void addEdge(T u, T v) {
+ 		size_t uHash = u.hash();
+ 		edges[uHash].insert(v.hash());
+-    }
+-
+-	const std::vector<size_t> matchSeq(std::vector<T> seq) {
+-		std::vector<size_t> finalHashes;
+-		std::unordered_set<size_t> availableNodes; // Hash
+-		std::unordered_set<size_t> coveredEdges; // Hash
+-		for (unsigned i = 0; i < seq.size(); ++i) {
+-			T node = seq[i];
+-			size_t nodeHash = node.hash();
+-			for (size_t pre : availableNodes) {
+-				if (edges.count(pre) > 0 && edges[pre].count(nodeHash) > 0) {
+-					size_t edgeHash = pre ^ (nodeHash + 0x9e3779b9 + (pre << 6) + (pre >> 2));
+-					coveredEdges.insert(edgeHash);
+-					// Optimization
+-					edges[pre].erase(nodeHash);
+-					if (edges[pre].empty()) {
+-						edges.erase(pre);
+-					}
++        }
++
++	void findAllPaths() {
++		std::vector<size_t> path;
++                std::unordered_map<size_t, uint8_t> visited;
++		for (size_t node : nodes) {
++			dfs(node, path, visited);
++		}
++                printf("Total path number is %u\n", pathNum);
++	}
++
++	std::vector<size_t> matchNode(T node) {
++                size_t nodeHash = node.hash();
++		std::vector<size_t> res;
++		std::unordered_set<Path*> paths = pathBaskets[nodeHash];
++		std::unordered_set<Path*> deleted;
++		std::unordered_set<Path*> moved;
++		for (Path* path : paths) {
++                        int matched = path->match(nodeHash);
++			if (matched == 1) {
++                                res.push_back(path->getCurHash());
++			}
++			if (matched != 0) {
++				if (path->isCovered()) {
++					deleted.insert(path);
++				} else {
++					moved.insert(path);
+ 				}
+ 			}
+-			if (edges.count(nodeHash) > 0) {
+-				availableNodes.insert(nodeHash);
++		}
++		for (Path* path : deleted) {
++			pathBaskets[nodeHash].erase(path);
++		}
++		for (Path* path : moved) {
++			pathBaskets[nodeHash].erase(path);
++			pathBaskets[path->getCurNode()].insert(path);
++		}
++		return res;
++	}
++	void reset() {
++		std::unordered_set<Path*> moved;
++		for (auto& itr : pathBaskets) {
++			std::unordered_set<Path*> removed;
++			size_t uHash = itr.first;
++			std::unordered_set<Path*>& members = itr.second;
++			for (Path* path : members) {
++				path->reset();
++				if (path->getCurNode() != uHash) {
++					moved.insert(path);
++					removed.insert(path);
++				}
+ 			}
+-		}
+-
+-		for (size_t edgeHash : coveredEdges) {
+-			finalHashes.push_back(edgeHash);
+-		}
+-		return finalHashes;
++			for (Path* path : removed) {
++				members.erase(path);
++			}
++		}
++		for (Path* path : moved) {
++			pathBaskets[path->getCurNode()].insert(path);
++		}
+ 	}
+ 
+ private:
+@@ -248,7 +346,32 @@
+ 	};
+ 	std::unordered_set<size_t> nodes; // Hash
+ 	std::unordered_map<size_t, std::unordered_set<size_t>> edges;
+-
++	std::unordered_map<size_t, std::unordered_set<Path*>> pathBaskets;
++        uint32_t pathNum;
++        void dfs(size_t nodeHash, std::vector<size_t>& path, std::unordered_map<size_t, uint8_t>& visited) {
++                ++visited[nodeHash];
++                path.push_back(nodeHash);
++                bool hasNeighbor = false;
++		for (size_t neighbor : edges[nodeHash]) {
++                        if (visited[neighbor] < NODE_LIMIT) {
++                            // Recursive DFS
++                            hasNeighbor = true;
++                            dfs(neighbor, path, visited);
++                        }
++		 }
++                if (!hasNeighbor) {
++                        storePath(path);
++                }
++
++                // Backtrack
++                --visited[nodeHash];
++                path.pop_back();
++        }
++
++	void storePath(const std::vector<size_t> path) {
++		pathBaskets[path[0]].insert(new Path(path));
++                pathNum++;
++	}
+ };
+ 
+ // From ChatGPT

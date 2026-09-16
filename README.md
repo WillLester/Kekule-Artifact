@@ -5,17 +5,38 @@ For installation and starting fuzzers, please check the steps in this file.
 For experiments, please refer to experiments.md.
 
 
-# Download LLVM 15.0.0
+# Install LLVM 15.0.0
 
-Download LLVM-15.0.0 source code through `wget https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.0/llvm-project-15.0.0.src.tar.xz`.
+Run the installer from the artifact directory to download LLVM 15.0.0, prepare
+the sources, and build and install the host compilers:
+
+```bash
+./install.sh
+source .llvm/env.sh
+```
+
+The script prepares Kekule-V and ViDeZZo sources under `.llvm/src/kekule-v`
+and `.llvm/src/videzzo`; pass the corresponding directory to
+`scripts/init_videzzo_docker.sh`. Their LLVM builds happen inside Docker.
+
+It installs Kekule-M and Morphuzz under `.llvm/install/kekule-m` and
+`.llvm/install/morphuzz`, respectively. Links in `.llvm/bin` provide
+`clang-n`/`clang++-n` for Kekule-M and `clang`/`clang++` for Morphuzz.
+
+It also installs the Kekule-M ablation and path-level dependency variants under
+`.llvm/install/kekule-m-a` and `.llvm/install/kekule-m-p`, providing
+`clang-a`/`clang++-a` and `clang-p`/`clang++-p`, respectively.
+
+The default (or `./install.sh all`) includes all six variants. Select individual
+variants with, for example, `./install.sh kekule-v videzzo` or
+`./install.sh kekule-m-a kekule-m-p`.
+
+Use `JOBS=8 ./install.sh` to change build parallelism (default: 2), and
+`LLVM_WORK_DIR` or `LLVM_INSTALL_ROOT` to customize storage and install paths.
+Run `./install.sh --help` for prerequisites and options. The ablation and
+path-level dependency builds require `patch`.
 
 # Kekule-V
-
-## Prepare LLVM 15.0.0
-
-1. Extract the source to two directories, one for Kekule-V, one for the vanilla ViDeZZo.
-2. Copy the files in llvm-project/kekule-v to one LLVM source to get the LLVM for Kekule-V.
-3. Copy the files in llvm-project/videzzo to the other LLVM source to get the LLVM for ViDeZZo.
 
 ## Prepare ViDeZZo
 
@@ -36,22 +57,18 @@ Also, pass the LLVM 15.0.0 source for ViDeZZo into the docker when running `init
 
 # Kekule-M
 
-## Install LLVM 15.0.0
+After running `install.sh` and sourcing `.llvm/env.sh` as above:
 
-Since Morphuzz runs locally, installing LLVM for both Kekule-M and Morphuzz is required.
+1. Run `scripts/qfuzz_init.sh` to initialize a Kekule-M instance in the workspace.
+2. Run `qfuzz_run.sh` in the workspace to start fuzzing.
 
-1. Extract LLVM 15.0.0 source code.
-2. For Kekule-M, copy the files under llvm-project/kekule-m to the source code.
-3. Install LLVM with `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS="-fconcepts" -DLLVM_ENABLE_PROJECTS="clang;compiler-rt"` in LLVM source directory. The install prefix can be custom. Then `make install`.
-4. Link the binaries clang and clang++ to clang-n and clang++-n, and add the binaries' paths to PATH.
-5. [optional] To build ablation version, apply  `videzzo/no-priority.patch` to `{LLVM_dir}/compiler-rt/lib/fuzzer/FuzzerLoop.cpp`, and install that version of LLVM. Link the binaries to clang-a and clang++-a.
-6. [optional] To build the path-level dependency version, apply the two patches under `{artifact_dir}/llvm-project/kekule-v/compiler-rt/lib/fuzzer/` to the corresponding files in LLVM source code, and install. Link the binaries to clang-p and clang++-p.
-7. Run `scripts/qfuzz_init.sh` to initialize a Kekule-M instance in the workspace.
-8. Run `qfuzz_run.sh` in the workspace to run fuzzing.
+Use `-n` for the default variant, `-a` for ablation, or `-p` for path-level
+dependencies when running the initialization and fuzzing scripts.
 
 # Morphuzz
 
-1. Install the vanilla LLVM 15.0.0. The binaries should be linked to clang and clang++.
-2. Run `scripts/qfuzz_init.sh` to initialize a Morphuzz instance in the workspace.
-3. Run `qfuzz_run.sh` in the workspace to run fuzzing.
+After running `install.sh` and sourcing `.llvm/env.sh` as above:
+
+1. Run `scripts/qfuzz_init.sh` to initialize a Morphuzz instance in the workspace.
+2. Run `qfuzz_run.sh` in the workspace to run fuzzing.
 

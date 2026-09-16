@@ -1,0 +1,42 @@
+--- FuzzerLoop.cpp.orig
++++ FuzzerLoop.cpp
+@@ -191,6 +191,7 @@
+ 	  }
+ 	  Printf("number of edges is %u\n", DepSum);
+ 	  dependFile.close();
++	  Dependencies.findAllPaths();
+ 	} else {
+       Printf("The dependency file doesn't exist\n");
+ 	  DependencyEnabled = false;
+@@ -624,7 +625,7 @@
+   
+   bool FoundNewRegOp = false;
+   if (DependencyEnabled) {
+-	std::vector<RegVar> Seq;
++	std::vector<size_t> coveredHashes;
+ 	int8_t curBehavior = -1;
+ 	while (!LocalReg.IsEmpty()) {
+ 		AccessVar Reg = LocalReg.Front();
+@@ -636,17 +637,18 @@
+ 			}
+ 		} else if (Reg.typeId == 2) {
+ 			if (curBehavior != -1) {
+-				Seq.push_back(RegVar(curBehavior, Reg.id, Reg.isRead, Reg.isMarked));
++				std::vector<size_t> hashes = Dependencies.matchNode(RegVar(curBehavior, Reg.id, Reg.isRead, Reg.isMarked));
++				coveredHashes.insert(coveredHashes.end(), hashes.begin(), hashes.end());
+ 			}
+ 		}
+ 		fuzzer::LocalReg.Pop();
+ 	}
+-	const std::vector<size_t>& finalHashes = Dependencies.matchSeq(Seq);
+-	for (size_t finalHash : finalHashes) {
+-		if (GlobalReg.AddValue(finalHash)) {
++	for (size_t coveredHash : coveredHashes) {
++		if (GlobalReg.AddValue(coveredHash)) {
+ 			FoundNewRegOp = true;
+ 		}
+ 	}
++	Dependencies.reset();
+ 	if (FoundNewRegOp) {
+ 		Printf("Found new combination\n");
+ 	}
