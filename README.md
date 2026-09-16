@@ -4,6 +4,9 @@ For installation and starting fuzzers, please check the steps in this file.
 
 For experiments, please refer to experiments.md.
 
+# Required Dependencies
+
+Check DEPENDENCIES.md to install the packages.
 
 # Install LLVM 15.0.0
 
