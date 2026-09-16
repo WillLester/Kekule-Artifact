@@ -1,32 +1,53 @@
+# Introduction
+
+For installation and starting fuzzers, please check the steps in this file.
+
+For experiments, please refer to experiments.md.
+
 # Kekule-V
 
-## Prepare QEMU
+## Download LLVM 15.0.0
 
-1. Clone ViDeZZo git repo from https://github.com/HexHive/ViDeZZo.git.
-2. Use the docker instance provided by ViDeZZo to continue the following steps, copy the artifact into the docker.
-3. Download LLVM-15.0.0 source codes.
-4. Copy the files in llvm-project/kekule-v to LLVM, install llvm with compiler-rt enabled.
-5. Build the passes with cmake and make, it will generate kekule.so.
-6. Go to videzzo, run `make qemu-dep` to download QEMU.
-7. Run `make patch`.
-8. Run `make qemu` to build QEMU.
+1. Download LLVM-15.0.0 source code.
+2. Extract the source to two directories, one for Kekule-V, one for the vanilla ViDeZZo.
+3. Copy the files in llvm-project/kekule-v to one LLVM source to get the LLVM for Kekule-V.
+4. Copy the files in llvm-project/videzzo to the other LLVM source to get the LLVM for ViDeZZo.
 
-## Analyze and Run
+## Prepare ViDeZZo
 
-1. Copy the meson .whl in patches to videzzo\_qemu/qemu/python/wheels.
-2. Run `make update-buildoptions`.
-3. Configure QEMU with the option --enable-llvm.
-4. Use `make` to generate the core file of a device.
-5. Use scripts/get\_device\_module.sh to generate the device module.
-6. Use scripts/instrument.sh to generate the dependency file and the instrumented .ll.
-7. Compile the .ll to .o.
-8. Configure QEMU without --enable-llvm, `make` the target qemu-videzzo-[arch].
-9. Link the .o of the core file with other files to get the binary.
-10. By setting the DEPENDENCY\_FUZZ environmental variable to the path to the dependency file, run the binary following ViDeZZo's guide.
+1. `git clone https://github.com/HexHive/ViDeZZo.git`
+2. Enter the ViDeZZo directory and `git checkout d698dde482a124863`
+3. Apply Dockerfile.patch under `{artifact_root}/videzzo` to the ViDeZZo directory.
+4. Build a ViDeZZo docker through `sudo docker build -t videzzo:latest .`
+5. Run `scripts/init_videzzo_docker.sh` with `-n` to initialize a ViDeZZo docker instance.
+6. Use `[sudo] docker exec -it {docker_id} /bin/bash` to enter the docker.
+7. `cd videzzo` and run Init.sh with `-n`.
+8. When the script finishes, run Run.sh with `-n` to start fuzzing.
+
+# ViDeZZo
+
+When Kekule-V is ready, replace `-n` with `-v` in its steps.
+
+Also, pass the LLVM 15.0.0 source for ViDeZZo into the docker when running `init_videzzo_docker.sh`.
 
 # Kekule-M
 
-The process is similar to Kekule-V. The differences are:
-1. It does not need a docker, just download QEMU and Morphuzz is inside.
-2. Use llvm-project/kekule-m files instead to install llvm.
-3. Skip all ViDeZZo-related steps.
+## Install LLVM 15.0.0
+
+Since Morphuzz runs locally, installing LLVM for both Kekule-M and Morphuzz is required.
+
+1. Extract LLVM 15.0.0 source code.
+2. For Kekule-M, copy the files under llvm-project/kekule-m to the source code.
+3. Install LLVM with `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ -DCMAKE_CXX_FLAGS="-fconcepts" -DLLVM_ENABLE_PROJECTS="clang;compiler-rt"` in LLVM source directory. The install prefix can be custom. Then `make install`.
+4. Link the binaries clang and clang++ to clang-n and clang++-n, and add the binaries' paths to PATH.
+5. [optional] To build ablation version, apply  `videzzo/no-priority.patch` to `{LLVM_dir}/compiler-rt/lib/fuzzer/FuzzerLoop.cpp`, and install that version of LLVM. Link the binaries to clang-a and clang++-a.
+6. [optional] To build the path-level dependency version, apply the two patches under `{artifact_dir}/llvm-project/kekule-v/compiler-rt/lib/fuzzer/` to the corresponding files in LLVM source code, and install. Link the binaries to clang-p and clang++-p.
+7. Run `scripts/qfuzz_init.sh` to initialize a Kekule-M instance in the workspace.
+8. Run `qfuzz_run.sh` in the workspace to run fuzzing.
+
+# Morphuzz
+
+1. Install the vanilla LLVM 15.0.0. The binaries should be linked to clang and clang++.
+2. Run `scripts/qfuzz_init.sh` to initialize a Morphuzz instance in the workspace.
+3. Run `qfuzz_run.sh` in the workspace to run fuzzing.
+

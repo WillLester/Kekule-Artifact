@@ -13,7 +13,7 @@ fi
 
 if [[ "$mode" == "san" ]] && [[ "$time_limit" == "-t" ]]
 then
-    san_time="-max_total_time=172800"
+    san_time="-max_total_time=86400"
 elif [[ "$mode" != "san" ]]
 then
     san_time="-max_total_time=86400"

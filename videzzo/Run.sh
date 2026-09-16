@@ -6,7 +6,7 @@ mode="$4"
 version="$5"
 if [[ "$mode" == "san" ]] && [[ "$version" == "-t" ]]
 then
-    san_time="-max_total_time=172800"
+    san_time="-max_total_time=86400"
 elif [[ "$mode" != "san" ]]
 then
     san_time="-max_total_time=86400"

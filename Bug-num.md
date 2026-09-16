@@ -1,0 +1,23 @@
+Bug num | Bug tag
+1 esp1
+2 esp2
+3 esp3
+4 esp4
+5 esp5
+6 cirrus-vga
+7 ati1
+8 ati2
+9 ohci
+10 ohci-2
+11 ohci-2
+12 smc91c111
+13 smc91c111-2
+14 smc91c111-3
+15 smc91c111-4
+16 lan9118
+17 lan9118-2
+18 lsi53c895a
+19 nvme
+20 pcnet
+21 std-vga
+22 std-vga

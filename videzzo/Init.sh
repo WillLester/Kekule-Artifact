@@ -413,8 +413,10 @@ then
 			make "$libcommon"/hw_display_cirrus_vga.c.ll
 			../../../pass/get_device_module.sh ../../../pass/Kekule.so ~/videzzo/videzzo_qemu/qemu/"$build_dir" \
 				./"$libcommon"/hw_display_cirrus_vga.c.ll &> log.txt
+			instrument_start=$SECONDS
 			../../../pass/instrument.sh "$platform" ../../../pass/Kekule.so ~/videzzo/videzzo_qemu/qemu/"$build_dir" "$libcommon"/hw_display_cirrus_vga.c.ll \
 				~/videzzo/cirrus-vga-depend.txt "$libcommon"/instrumented_hw_display_cirrus_vga.c.ll &> error.txt
+			printf 'instrument.sh (%s) elapsed time: %d seconds\n' "$version" "$((SECONDS - instrument_start))"
 			clang -m64 -mcx16 -o "$libcommon"/hw_display_cirrus_vga.c.o -c "$libcommon"/instrumented_hw_display_cirrus_vga.c.ll
 			cp "$libcommon"/hw_display_cirrus_vga.c.o ../../../
 			;;
