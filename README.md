@@ -4,14 +4,18 @@ For installation and starting fuzzers, please check the steps in this file.
 
 For experiments, please refer to experiments.md.
 
+
+# Download LLVM 15.0.0
+
+Download LLVM-15.0.0 source code through `wget https://github.com/llvm/llvm-project/releases/download/llvmorg-15.0.0/llvm-project-15.0.0.src.tar.xz`.
+
 # Kekule-V
 
-## Download LLVM 15.0.0
+## Prepare LLVM 15.0.0
 
-1. Download LLVM-15.0.0 source code.
-2. Extract the source to two directories, one for Kekule-V, one for the vanilla ViDeZZo.
-3. Copy the files in llvm-project/kekule-v to one LLVM source to get the LLVM for Kekule-V.
-4. Copy the files in llvm-project/videzzo to the other LLVM source to get the LLVM for ViDeZZo.
+1. Extract the source to two directories, one for Kekule-V, one for the vanilla ViDeZZo.
+2. Copy the files in llvm-project/kekule-v to one LLVM source to get the LLVM for Kekule-V.
+3. Copy the files in llvm-project/videzzo to the other LLVM source to get the LLVM for ViDeZZo.
 
 ## Prepare ViDeZZo
 
