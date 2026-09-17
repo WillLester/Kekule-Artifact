@@ -2,7 +2,7 @@
 
 ```bash
 sudo apt-get install -y \
-  build-essential binutils cmake ninja-build pkg-config git patch \
+  build-essential gcc-12 g++-12 binutils cmake ninja-build pkg-config git patch \
   bash coreutils findutils grep sed wget ca-certificates tar xz-utils \
   python3 python3-venv python3-pip python3-setuptools python3-wheel python3-tomli \
   libglib2.0-dev zlib1g-dev libpixman-1-dev \

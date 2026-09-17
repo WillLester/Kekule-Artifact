@@ -17,7 +17,7 @@ Environment:
   JOBS               Parallel build jobs (default: 2; LLVM needs much RAM)
 
 Requires wget, tar, xz, and GNU utilities. Host builds also require CMake,
-make, GCC/G++, Python 3, and LLVM's build dependencies. The -a/-p variants
+make, GCC/G++ 12, Python 3, and LLVM's build dependencies. The -a/-p variants
 also require patch.
 After installation, source the printed env.sh path in Bash.
 HELP
@@ -52,7 +52,7 @@ for target in "${targets[@]}"; do
 done
 
 commands=(wget tar xz cp mkdir mv ln realpath touch)
-if $host_build; then commands+=(cmake make gcc g++ python3); fi
+if $host_build; then commands+=(cmake make gcc-12 g++-12 python3); fi
 if $needs_patch; then commands+=(patch); fi
 for command in "${commands[@]}"; do
     command -v "$command" >/dev/null 2>&1 || die "required command not found: $command"
@@ -125,8 +125,8 @@ for target in "${targets[@]}"; do
     build="$work_dir/build/$target"
     cmake -S "$work_dir/src/$target/llvm" -B "$build" -G 'Unix Makefiles' \
         -DCMAKE_BUILD_TYPE=Release \
-        -DCMAKE_C_COMPILER=gcc \
-        -DCMAKE_CXX_COMPILER=g++ \
+        -DCMAKE_C_COMPILER=gcc-12 \
+        -DCMAKE_CXX_COMPILER=g++-12 \
         -DCMAKE_CXX_FLAGS=-fconcepts \
         '-DLLVM_ENABLE_PROJECTS=clang;compiler-rt' \
         "-DCMAKE_INSTALL_PREFIX=$prefix"
