@@ -1,6 +1,6 @@
---- Dockerfile.orig	2025-04-14 19:33:21.061246340 +0000
-+++ Dockerfile	2025-05-03 03:01:03.493095744 +0000
-@@ -10,7 +10,7 @@
+--- Dockerfile.orig	2026-09-18 08:14:56.699961338 +0000
++++ Dockerfile	2026-09-18 08:16:04.296234812 +0000
+@@ -10,12 +10,12 @@
  libcap-ng-dev pkg-config libvncserver-dev software-properties-common \
  git libjpeg-dev libsasl2-dev libncurses5-dev libncursesw5-dev \
  libgtk-3-dev libsdl2-dev screen parallel \
@@ -9,6 +9,12 @@
  
  RUN apt-get install -y curl
  RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+ RUN python3 get-pip.py
+-RUN python3 -m pip install wllvm picire gdown pyyaml tomli
++RUN python3 -m pip install wllvm picire gdown pyyaml tomli distlib
+ 
+ 
+ WORKDIR /root
 @@ -65,12 +65,13 @@
  # fix missing slirp
  RUN apt-get install -y libslirp-dev

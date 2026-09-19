@@ -49,8 +49,8 @@ path-level dependency builds require `patch`.
 4. Build a ViDeZZo docker through `sudo docker build -t videzzo:latest .`
 5. Run `scripts/init_videzzo_docker.sh` with `-n` to initialize a ViDeZZo docker instance.
 6. Use `[sudo] docker exec -it {docker_id} /bin/bash` to enter the docker.
-7. `cd videzzo` and run Init.sh with `-n`.
-8. When the script finishes, run Run.sh with `-n` to start fuzzing.
+7. `cd videzzo` and run Init.sh with `-n` (e.g., to test bug esp1, use `./Init.sh -n esp1 san`).
+8. When the script finishes, run Run.sh with `-n` to start fuzzing (e.g., for esp1, use `./Run.sh -n x86_64 am53c974 san -t`. `-t` means using 24 hours as the time limit).
 
 # ViDeZZo
 
