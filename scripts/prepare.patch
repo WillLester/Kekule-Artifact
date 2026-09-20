@@ -1,0 +1,161 @@
+diff --git a/tests/qtest/fuzz/fuzz.c b/tests/qtest/fuzz/fuzz.c
+index 8274000bd5..c7b42cf5b7 100644
+--- a/tests/qtest/fuzz/fuzz.c
++++ b/tests/qtest/fuzz/fuzz.c
+@@ -26,6 +26,15 @@
+ #include "tests/qtest/libqos/qgraph.h"
+ #include "fuzz.h"
+ 
++#ifdef CLANG_COV_DUMP
++#include "clangcovdump.h"
++#ifdef __cplusplus
++extern "C" int __llvm_profile_runtime;
++#else
++int __llvm_profile_runtime;
++#endif
++#endif
++
+ #define MAX_EVENT_LOOPS 10
+ 
+ typedef struct FuzzTargetState {
+@@ -155,6 +164,10 @@ int LLVMFuzzerTestOneInput(const unsigned char *Data, size_t Size)
+         pre_fuzz_done = true;
+     }
+ 
++    #ifdef CLANG_COV_DUMP
++        llvm_profile_initialize_file(true);
++    #endif
++
+     fuzz_target->fuzz(fuzz_qts, Data, Size);
+     return 0;
+ }
+diff --git a/tests/qtest/fuzz/generic_fuzz_configs.h b/tests/qtest/fuzz/generic_fuzz_configs.h
+index ef0ad95712..4cc8d51520 100644
+--- a/tests/qtest/fuzz/generic_fuzz_configs.h
++++ b/tests/qtest/fuzz/generic_fuzz_configs.h
+@@ -227,26 +227,122 @@ const generic_fuzz_config predefined_configs[] = {
+         .args = "-machine q35 -nodefaults "
+         "-device ac97,audiodev=snd0 -audiodev none,id=snd0 -nodefaults",
+         .objects = "ac97*",
++    },{
++        .name = "acpi-erst",
++        .args = "-machine q35 -nodefaults "
++        "-object memory-backend-file,id=erstnvram,mem-path=acpi-erst.backing,size=0x10000,share=on "
++        "-device acpi-erst,memdev=erstnvram",
++        .objects = "*acpi* *erst*",
++    },{
++        .name = "ati",
++        .args = "-machine q35 -nodefaults -device ati-vga,romfile=\"\" ",
++        .objects = "ati.mm*"
+     },{
+         .name = "cs4231a",
+         .args = "-machine q35 -nodefaults "
+         "-device cs4231a,audiodev=snd0 -audiodev none,id=snd0 -nodefaults",
+         .objects = "cs4231a* i8257*",
++    },{
++        .name = "ctu-can",
++        .args = "-machine q35 -nodefaults "
++        "-object can-bus,id=canbus0-bus "
++        "-device ctucan_pci,canbus0=canbus0-bus,canbus1=canbus0-bus",
++        .objects = "*ctucan*",
+     },{
+         .name = "es1370",
+         .args = "-machine q35 -nodefaults "
+         "-device es1370,audiodev=snd0 -audiodev none,id=snd0 -nodefaults",
+         .objects = "es1370*",
+     },{
+-        .name = "sb16",
++        .name = "fdc",
++        .args = "-machine pc -nodefaults "
++        "-drive id=disk0,file=null-co://,file.read-zeroes=on,if=none,format=raw "
++        "-device floppy,unit=0,drive=disk0",
++        .objects = "*fdc* *dma*",
++    },{
++        .name = "imx-usb-phy",
++        .args = "-machine sabrelite",
++        .objects = "*imx-usbphy*",
++    },{
++        .name = "kvaser-can",
+         .args = "-machine q35 -nodefaults "
+-        "-device sb16,audiodev=snd0 -audiodev none,id=snd0 -nodefaults",
+-        .objects = "sb16* i8257*",
++        "-object can-bus,id=canbus0 -device kvaser_pci,canbus=canbus0",
++        .objects = "*kvaser*"
++    },{
++        .name = "lan9118",
++        .args = "-machine smdkc210",
++        .objects = "*lan9118-mmio*"
++    },{
++        .name = "lsi53c895a",
++        .args = "-machine q35 -nodefaults "
++        "-device lsi53c895a,id=scsi0 "
++        "-device scsi-hd,drive=drive0,bus=scsi0.0,channel=0,scsi-id=0,lun=0 "
++        "-drive file=null-co://,if=none,format=raw,id=drive0 "
++        "-device scsi-hd,drive=drive1,bus=scsi0.0,channel=0,scsi-id=1,lun=0 "
++        "-drive file=null-co://,if=none,format=raw,id=drive1",
++        .objects = "lsi*"
+     },{
+         .name = "parallel",
+         .args = "-machine q35 -nodefaults "
+         "-parallel file:/dev/null",
+         .objects = "parallel*",
++    },{
++        .name = "pcm3680-can",
++        .args = "-machine q35 -nodefaults "
++        "-object can-bus,id=canbus "
++        "-device pcm3680_pci,canbus0=canbus,canbus1=canbus",
++        .objects = "*pcm3680i_pci-sja1* *pcm3680i_pci-sja2*"
++    },{
++        .name = "qxl",
++        .args = "-machine q35 -nodefaults -device qxl "
++        "-display vnc=localhost:101 -L ./qemu/pc-bios/",
++        .objects = "*qxl-ioports*"
++    },{
++        .name = "sb16",
++        .args = "-machine q35 -nodefaults "
++        "-device sb16,audiodev=snd0 -audiodev none,id=snd0 -nodefaults",
++        .objects = "sb16* i8257*",
++    },{
++        .name = "sdhci",
++        .args = "-nodefaults -device sdhci-pci,sd-spec-version=3 "
++        "-device sd-card,drive=mydrive "
++        "-drive if=none,index=0,file=null-co://,format=raw,id=mydrive -nographic",
++        .objects = "*sdhci*"
++    },{
++        .name = "std-vga",
++        .args = "-machine q35 -nodefaults -device VGA ",
++        .objects = "VGA "
++        "*bochs dispi interface* *qemu extended regs*"
++    },{
++        .name = "smc91c111",
++        .args = "-machine realview-eb",
++        .objects = "*smc91c111-mmio*"
++    },{
++        .name = "stellaris-enet",
++        .args = "-machine lm3s6965evb",
++        .objects = "*stellaris_enet*"
++    },{
++        .name = "tulip",
++        .args = "-M q35 -nodefaults "
++        "-device tulip,netdev=net0 -netdev user,id=net0",
++        .objects = "tulip*"
++    },{
++        .name = "uhci",
++        .args = "-machine q35 -nodefaults -device piix3-usb-uhci,id=uhci,addr=1d.0 "
++        "-drive id=drive0,if=none,file=null-co://,file.read-zeroes=on,format=raw "
++        "-device usb-tablet,bus=uhci.0,port=1",
++        .objects = "*uhci*"
++    },{
++        .name = "xgmac",
++        .args = "-machine midway",
++        .objects = "*xgmac*"
++    },{
++        .name = "nvme",
++        .args = "-machine pc -nodefaults "
++        "-drive id=nvm,file=null-co://,file.read-zeroes=on,if=none,format=raw "
++        "-object memory-backend-file,id=mb,share=on,mem-path=/tmp/nvm-mb,size=4096 "
++        "-device nvme,cmb_size_mb=32,serial=deadbeef,drive=nvm,pmrdev=mb",
++        .objects = "nvme"
+     }
+ };
+ 

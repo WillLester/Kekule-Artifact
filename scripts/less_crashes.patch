@@ -1,0 +1,18 @@
+--- ./include/qemu/osdep.h.orig	2024-12-18 07:23:48.008869687 +0000
++++ ./include/qemu/osdep.h	2024-12-18 07:24:28.091709320 +0000
+@@ -280,6 +280,15 @@
+ #error building with G_DISABLE_ASSERT is not supported
+ #endif
+ 
++#ifdef LESS_CRASHES
++#undef assert
++#define assert(x)
++#undef g_assert
++#define g_assert(x)
++#undef g_assert_not_reached
++#define g_assert_not_reached()
++#endif
++
+ #ifndef O_LARGEFILE
+ #define O_LARGEFILE 0
+ #endif
