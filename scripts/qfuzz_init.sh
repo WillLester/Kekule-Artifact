@@ -24,6 +24,7 @@ cp "$artifact_root"/scripts/prepare.patch "$workdir"
 cp "$artifact_root"/scripts/less_crashes.patch "$workdir"
 cp "$artifact_root"/scripts/clangcovdump.h "$workdir"
 cp "$artifact_root"/scripts/qfuzz_run.sh "$workdir"
+cp "$artifact_root"/scripts/gen_cov_data.py "$workdir"
 
 case "$version" in
 	"ati2")

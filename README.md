@@ -47,16 +47,18 @@ path-level dependency builds require `patch`.
 2. Enter the ViDeZZo directory and `git checkout d698dde482a124863`
 3. Apply Dockerfile.patch under `{artifact_root}/videzzo` to the ViDeZZo directory.
 4. Build a ViDeZZo docker through `sudo docker build -t videzzo:latest .`
-5. Run `scripts/init_videzzo_docker.sh` with `-n` to initialize a ViDeZZo docker instance.
+5. Run `scripts/init_videzzo_docker.sh` with `-n {bug_tag} {workspace_dir} {kekule-v-llvm_dir}` to initialize a ViDeZZo docker instance.
 6. Use `[sudo] docker exec -it {docker_id} /bin/bash` to enter the docker.
-7. `cd videzzo` and run Init.sh with `-n` (e.g., to test bug esp1, use `./Init.sh -n esp1 san`).
+7. `cd videzzo` and run Init.sh with `-n` (e.g., to test bug esp1, use `./Init.sh -n esp1 san`). For testing the no priority version and path-dependency version, add `-a` or `-p` as the extra option.
 8. When the script finishes, run Run.sh with `-n` to start fuzzing (e.g., for esp1, use `./Run.sh -n x86_64 am53c974 san -t`. `-t` means using 24 hours as the time limit).
+9. All logs will be in fuzz-log.txt, where you can check the time cost and triggered bugs.
 
 # ViDeZZo
 
-When Kekule-V is ready, replace `-n` with `-v` in its steps.
-
-Also, pass the LLVM 15.0.0 source for ViDeZZo into the docker when running `init_videzzo_docker.sh`.
+1. Run `scripts/init_videzzo_docker.sh` with `-v {bug_tag} {workspace_dir} {videzzo-llvm_dir}` to initialize a ViDeZZo docker instance.
+2. Use `[sudo] docker exec -it {docker_id} /bin/bash` to enter the docker.
+3. `cd videzzo` and run Init.sh with `-v` (e.g., to test bug esp1, use `./Init.sh -v esp1 san`).
+4. When the script finishes, run Run.sh with `-v` to start fuzzing (e.g., for esp1, use `./Run.sh -v x86_64 am53c974 san -t`. `-t` means using 24 hours as the time limit). If x86\_64 arch target cannot be found, redo from the docker initialization step as ViDeZZo sometimes misses building x86\_64 targets without a clear reason.
 
 # Kekule-M
 

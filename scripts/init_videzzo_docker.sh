@@ -114,6 +114,7 @@ fi
 apply_patch_file "$workspace/Dockerfile" "$assets_dir/Dockerfile.patch"
 copy_file "$assets_dir/Init.sh" "$workspace/"
 copy_file "$assets_dir/Run.sh" "$workspace/"
+copy_file "$artifact_scripts_dir/gen_cov_data.py" "$workspace/"
 
 mkdir -p -- \
     "$workspace/patches/include/qemu" \

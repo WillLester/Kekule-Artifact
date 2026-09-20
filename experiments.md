@@ -20,7 +20,11 @@ Run 10 (or fewer like 5) instances each bug for each fuzzer. Find the last log t
 
 # 5.4
 
-Run 4 instances for AM53C974. CIRRUS-VGA, and LAN9118. Use bug tags esp4, cirrus-vga, and lan9118.
+Run 4 instances for AM53C974. CIRRUS-VGA, and LAN9118.
+
+When running `Init.sh` and `qfuzz_init.sh`, use mode `cov`.
+
+For bug tags, use `esp-cov, cirrus-vga-cov, lan9118` for `init_videzzo_docker.sh`, `esp-upstream, cirrus-vga-upstream, lan9118-upstream` for `Init.sh`.
 
 When finished, use `scripts/gen_cov_data.py` to get the summary of coverage of each device.
 
