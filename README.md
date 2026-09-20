@@ -4,6 +4,8 @@ For installation and starting fuzzers, please check the steps in this file.
 
 For experiments, please refer to experiments.md.
 
+If you encounter Segmentation fault when launching the fuzzers (log is empty), just retry. It is a random error.
+
 # Required Dependencies
 
 Check DEPENDENCIES.md to install the packages.
@@ -73,13 +75,11 @@ After running `install.sh` and sourcing `.llvm/env.sh` as above:
 1. Run `scripts/qfuzz_init.sh` to initialize a Kekule-M instance in the workspace (e.g., `./scripts/qfuzz_init.sh -n x86_64 esp1 san {workspace_dir}`).
 2. Run `qfuzz_run.sh` in the workspace to start fuzzing (e.g., `./qfuzz_run.sh -n x86_64 am53c974 san`).
 
-Use `-n` for the default variant, `-a` for ablation, or `-p` for path-level
-dependencies when running the initialization and fuzzing scripts.
+For testing the no-priority version, add `-a` as the extra option. For testing the path-dependency version, add `-p` as the extra option.
 
 # Morphuzz
 
 After running `install.sh` and sourcing `.llvm/env.sh` as above:
 
-1. Run `scripts/qfuzz_init.sh` to initialize a Morphuzz instance in the workspace.
+1. Run `scripts/qfuzz_init.sh` to initialize a Morphuzz instance in the workspace, use `-v` instead of `-n`.
 2. Run `qfuzz_run.sh` in the workspace to run fuzzing.
-
