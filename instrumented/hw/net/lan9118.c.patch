@@ -1,0 +1,17 @@
+--- hw/net/lan9118.c	2025-01-16 04:29:19.465301247 +0000
++++ hw/net/lan9118.c.mod	2025-01-16 04:29:16.854248200 +0000
+@@ -489,8 +489,12 @@
+ {
+     int fifo_pos;
+     fifo_pos = s->rx_fifo_head + s->rx_fifo_used;
+-    if (fifo_pos >= s->rx_fifo_size)
+-      fifo_pos -= s->rx_fifo_size;
++    if (fifo_pos < 0)
++        return;
++    while (fifo_pos >= s->rx_fifo_size)
++        fifo_pos -= s->rx_fifo_size;
++    if (fifo_pos < 0)
++        return;
+     s->rx_fifo[fifo_pos] = val;
+     s->rx_fifo_used++;
+ }

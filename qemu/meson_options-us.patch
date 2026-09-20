@@ -1,0 +1,11 @@
+--- meson_options.txt.orig	2024-04-15 05:59:58.809277391 +0000
++++ meson_options.txt	2024-04-15 06:00:17.861649959 +0000
+@@ -43,6 +43,8 @@
+        description: 'Documentations build support')
+ option('fuzzing', type : 'boolean', value: false,
+        description: 'build fuzzing targets')
++option('llvm', type : 'boolean', value: false,
++       description: 'build llvm ir')
+ option('gettext', type : 'feature', value : 'auto',
+        description: 'Localization of the GTK+ user interface')
+ option('modules', type : 'feature', value : 'disabled',

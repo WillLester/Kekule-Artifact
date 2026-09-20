@@ -141,6 +141,7 @@ next_interval = 1
 
 for f in files:
 	# Generate the coverage summary
+	print("Processing file", f)
 	time = int(f.split('-')[1])
 	interval = time - start_time
 	if interval < next_interval and f != files[-1]:

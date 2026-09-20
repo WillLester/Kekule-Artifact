@@ -1,0 +1,20 @@
+--- hw/net/pcnet.c.orig	2025-01-12 07:12:41.788031141 +0000
++++ hw/net/pcnet.c	2025-01-12 07:13:46.139353419 +0000
+@@ -1062,6 +1062,8 @@
+ 
+                 while (p != &src[size])
+                     CRC(fcs, *p++);
++                if (((uintptr_t)p & 0x3) != 0)
++                    return -1;
+                 *(uint32_t *)p = htonl(fcs);
+                 size += 4;
+             } else {
+@@ -1070,6 +1072,8 @@
+ 
+                 while (p != &src[size])
+                     CRC(fcs, *p++);
++                if (((uintptr_t)p & 0x3) != 0)
++                    return -1;
+                 crc_err = (*(uint32_t *)p != htonl(fcs));
+             }
+ 

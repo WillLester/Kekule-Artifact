@@ -39,6 +39,12 @@ Use `JOBS=8 ./install.sh` to change build parallelism (default: 2), and
 Run `./install.sh --help` for prerequisites and options. The ablation and
 path-level dependency builds require `patch`.
 
+# Build Kekule.so
+
+1. `mkdir build && cd build`
+2. `cmake ../`
+3. `make`, then you should see Kekule.so under build/pass.
+
 # Kekule-V
 
 ## Prepare ViDeZZo
@@ -64,8 +70,8 @@ path-level dependency builds require `patch`.
 
 After running `install.sh` and sourcing `.llvm/env.sh` as above:
 
-1. Run `scripts/qfuzz_init.sh` to initialize a Kekule-M instance in the workspace.
-2. Run `qfuzz_run.sh` in the workspace to start fuzzing.
+1. Run `scripts/qfuzz_init.sh` to initialize a Kekule-M instance in the workspace (e.g., `./scripts/qfuzz_init.sh -n x86_64 esp1 san {workspace_dir}`).
+2. Run `qfuzz_run.sh` in the workspace to start fuzzing (e.g., `./qfuzz_run.sh -n x86_64 am53c974 san`).
 
 Use `-n` for the default variant, `-a` for ablation, or `-p` for path-level
 dependencies when running the initialization and fuzzing scripts.

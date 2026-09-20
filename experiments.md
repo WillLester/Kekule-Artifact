@@ -26,7 +26,9 @@ When running `Init.sh` and `qfuzz_init.sh`, use mode `cov`.
 
 For bug tags, use `esp-cov, cirrus-vga-cov, lan9118` for `init_videzzo_docker.sh`, `esp-upstream, cirrus-vga-upstream, lan9118-upstream` for `Init.sh`.
 
-When finished, use `scripts/gen_cov_data.py` to get the summary of coverage of each device.
+When finished, use `scripts/gen_cov_data.py` to get the summary of coverage of each device
+(e.g. `python3 gen_cov_data.py ./ qemu am53c974 ./videzzo_qemu/out-cov/qemu-videzzo-x86_64-target-videzzo-fuzz-am53c974 ./am53c974-cov.txt videzzo`,
+you will see the result in am53c974-cov.txt).
 
 # 5.5
 
