@@ -1,3 +1,7 @@
+# Update
+
+Please refer to ARTIFACT.md for a complete guidance.
+
 # Introduction
 
 For installation and starting fuzzers, please check the steps in this file.
